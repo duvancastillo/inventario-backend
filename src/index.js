@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 require('./database');
 // settings
-app.set('port', process.env.PORT || 4001);
+app.set('port', process.env.PORT || 4000);
 
 // middlewares
 app.use(morgan('dev'));
@@ -17,6 +17,7 @@ app.use(cors());
 // Routes
 app.use('/article', require('./routes/articles.routes'));
 app.use('/user', require('./routes/user.routes'))
+app.use('/authentic', require('./routes/authentic.routes'));
 
 
 // static files

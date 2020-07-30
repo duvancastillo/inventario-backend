@@ -3,34 +3,37 @@ const router = express.Router();
 const config = require('../config/config')
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { json } = require('express');
 
+app = express();
+
+app.set('llave', config.llave);
 
 router.get('/', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const {name,email, password} = req.body;
-    const email = await User.findOne({email : email});
-    const password = await User.findOne({password: password});
-    if (email) {
-        if (req.body.email === email && req.body.password === password) {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+        if (user.email === email && user.password === password) {
             const payload = {
-                check:  true
-               };
-               const token = jwt.sign(payload, app.get('llave'), {
+                check: true
+            };
+            const token = jwt.sign(payload, app.get('llave'), {
                 expiresIn: 1440
-               });
-               res.json({
-                mensaje: 'Autenticación correcta',
-                token: token });
-            
+            });
+            res.json({
+                status: 'Autenticación correcta',
+                token: token
+            });
+
         } else {
-            return res.json({status: 'constrasea incorrecta'})
+            return res.status(404).json({ status: 'constrasea incorrecta' })
         }
     } else {
-        return res.json({status : 'el usuario no existe'});
-        
+        return res.status(404).json({ status: 'el usuario no existe' });
+
     }
 
 
